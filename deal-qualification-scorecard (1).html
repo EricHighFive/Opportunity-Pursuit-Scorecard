@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deal Qualification Scorecard</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #dbe3ef;
+      --dark: #111827;
+      --green-bg: #dcfce7;
+      --green-text: #166534;
+      --yellow-bg: #fef9c3;
+      --yellow-text: #854d0e;
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      background: var(--card);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    .intro {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 12px 0 0;
+    }
+
+    .deal-name { min-width: 320px; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus { border-color: #64748b; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 370px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .question-card,
+    .score-card,
+    .category-header,
+    .sample-language {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .category-block { margin-bottom: 24px; }
+
+    .category-header {
+      padding: 22px;
+      margin-bottom: 14px;
+    }
+
+    .category-header h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .category-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .question-card {
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .question-header {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .question-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 0 0 6px;
+    }
+
+    .question-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .option-button {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 15px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: 0.18s ease;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .option-button:hover { border-color: #64748b; }
+
+    .option-button.selected {
+      background: var(--dark);
+      color: #ffffff;
+      border-color: var(--dark);
+    }
+
+    .points {
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      padding: 4px 8px;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 12px 48px;
+    }
+
+    .coaching-toggle,
+    .actions-toggle {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .coaching-toggle {
+      border-color: #93c5fd;
+      background: #e0f2fe;
+      color: #1e3a8a;
+    }
+
+    .coaching-toggle:hover {
+      border-color: #60a5fa;
+      background: #bfdbfe;
+    }
+
+    .actions-toggle {
+      border-color: #86efac;
+      background: #dcfce7;
+      color: #14532d;
+    }
+
+    .actions-toggle:hover {
+      border-color: #4ade80;
+      background: #bbf7d0;
+    }
+
+    .coaching-panel,
+    .actions-panel {
+      display: none;
+      margin: 0 0 18px 48px;
+      padding: 14px 16px;
+      border-radius: 16px;
+    }
+
+    .coaching-panel {
+      border: 1px solid #dbe3ef;
+      background: #f8fafc;
+    }
+
+    .actions-panel {
+      border: 1px solid #d1fae5;
+      background: #ecfdf5;
+    }
+
+    .coaching-panel.open,
+    .actions-panel.open { display: block; }
+
+    .coaching-panel p,
+    .actions-panel p {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    .coaching-panel ul,
+    .actions-panel ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .coaching-panel li,
+    .actions-panel li {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 6px;
+      line-height: 1.45;
+    }
+
+    .score-card {
+      padding: 24px;
+      position: sticky;
+      top: 20px;
+    }
+
+    .score-label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 13px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .score-number {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .max-score {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--dark);
+      transition: width 0.25s ease;
+    }
+
+    .completion {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 18px;
+    }
+
+    .recommendation {
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 18px;
+      border: 1px solid transparent;
+    }
+
+    .recommendation h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .recommendation p {
+      margin: 0;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .pursue { background: var(--green-bg); color: var(--green-text); border-color: #86efac; }
+    .review { background: var(--yellow-bg); color: var(--yellow-text); border-color: #fde68a; }
+    .decline { background: var(--red-bg); color: var(--red-text); border-color: #fecaca; }
+
+    .actions,
+    .thresholds {
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .actions h3,
+    .thresholds h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    ul { margin: 8px 0 0; padding-left: 20px; }
+
+    li {
+      margin-bottom: 7px;
+      line-height: 1.45;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .thresholds p {
+      margin: 5px 0;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .reset-button,
+    .pdf-button,
+    .email-button {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .reset-button { margin-bottom: 10px; }
+
+    .reset-button:hover,
+    .pdf-button:hover {
+      border-color: #64748b;
+      background: #f8fafc;
+    }
+
+    .pdf-button {
+      margin-bottom: 10px;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      color: #1e40af;
+    }
+
+    .pdf-button:hover {
+      border-color: #93c5fd;
+      background: #dbeafe;
+    }
+
+    .email-button {
+      border-color: #a7f3d0;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    .email-button:hover {
+      border-color: #6ee7b7;
+      background: #d1fae5;
+    }
+
+    .email-panel {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .email-panel.open { display: block; }
+
+    .email-panel label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .email-send-button {
+      width: 100%;
+      margin-top: 10px;
+      border: none;
+      background: var(--dark);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .email-send-button:hover { background: #1e293b; }
+
+    .email-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .sample-language {
+      margin-top: 24px;
+      padding: 24px;
+    }
+
+    .sample-language h2 { margin-top: 0; }
+
+    .language-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .language-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      background: #ffffff;
+    }
+
+    .language-card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .language-card p {
+      color: #475569;
+      line-height: 1.55;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      body { background: #ffffff; }
+      .score-card { position: static; }
+      .button-row,
+      .coaching-panel,
+      .actions-panel,
+      .reset-button,
+      .pdf-button,
+      .email-button,
+      .email-panel,
+      .coaching-toggle,
+      .actions-toggle { display: none !important; }
+      .layout { display: block; }
+      .score-card { margin-top: 24px; }
+      .container { padding: 16px; }
+      .question-card,
+      .score-card,
+      .category-header,
+      .sample-language,
+      .hero { box-shadow: none; border: 1px solid #dbe3ef; }
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+        display: block;
+      }
+
+      .deal-name {
+        min-width: 0;
+        margin-top: 20px;
+      }
+
+      .score-card {
+        position: static;
+        margin-top: 20px;
+      }
+
+      .language-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .container { padding: 16px; }
+      .options { grid-template-columns: 1fr; }
+      .button-row,
+      .coaching-panel,
+      .actions-panel { margin-left: 0; }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">HighFive Advisory Opportunity Qualification Tool</p>
+        <h1>Go-No Go Checklist</h1>
+        <p class="intro">
+          Use this with the sales team to qualify opportunities in or out based on fit, urgency, access, buying dynamics, competitive position, and strategic value. Total point scores are not absolute, and should be validated with key stakeholders — internal team and client team.
+        </p>
+      </div>
+      <div class="deal-name">
+        <label for="dealName">Opportunity / Client Name</label>
+        <input id="dealName" type="text" placeholder="Enter deal name" />
+      </div>
+    </section>
+
+    <section class="layout">
+      <div id="questions"></div>
+
+      <aside class="score-card">
+        <p class="score-label">Current Score</p>
+        <div class="score-row">
+          <span class="score-number" id="score">0</span>
+          <span class="max-score">/ <span id="maxScore">100</span></span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <p class="completion" id="completion">0 of 10 questions completed</p>
+
+        <div class="recommendation decline" id="recommendationBox">
+          <h2 id="recommendationTitle">Decline / Qualify Out</h2>
+          <p id="recommendationSummary">This opportunity does not currently meet the threshold for active pursuit.</p>
+        </div>
+
+        <div class="actions">
+          <h3>Recommended next actions</h3>
+          <ul id="actionList"></ul>
+        </div>
+
+        <div class="thresholds">
+          <h3>Thresholds</h3>
+          <p><strong>70 and up:</strong> Pursue</p>
+          <p><strong>50–69:</strong> Review further</p>
+          <p><strong>Under 50:</strong> Decline / qualify out</p>
+        </div>
+
+        <button class="reset-button" id="resetButton">↺ Reset scorecard</button>
+
+        <button class="pdf-button" id="pdfButton">⬇ Download results as PDF</button>
+
+        <button class="email-button" id="emailToggleButton">✉ Email results</button>
+
+        <div class="email-panel" id="emailPanel">
+          <label for="emailInput">Recipient email address</label>
+          <input type="email" id="emailInput" placeholder="name@company.com" />
+          <button class="email-send-button" id="emailSendButton">Send results</button>
+          <p class="email-note">This will open your default email client with a pre-filled summary of the scorecard results.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="sample-language">
+      <h2>Sample Language by Score Range</h2>
+      <div class="language-grid">
+        <div class="language-card">
+          <h3 style="color: var(--green-text);">70+ Points | Pursue</h3>
+          <p>This opportunity shows strong qualification across fit, urgency, buyer access, decision dynamics, and strategic value. The recommendation is to pursue. Assemble the right internal team, build a focused deal pursuit strategy, and align on the actions required to increase win probability.</p>
+        </div>
+        <div class="language-card">
+          <h3 style="color: var(--yellow-text);">50–69 Points | Review Further</h3>
+          <p>This opportunity has potential, but there are qualification gaps that need to be resolved before we commit significant resources. Assemble the team, engage the client and key stakeholders, and use the next interaction to further qualify need, urgency, access, budget, and decision process.</p>
+        </div>
+        <div class="language-card">
+          <h3 style="color: var(--red-text);">Under 50 Points | Decline</h3>
+          <p>This opportunity does not currently meet the threshold for active pursuit. Assemble the team to confirm the decision, agree on any appropriate next steps, and determine how to continue nurturing the relationship if there is future potential.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const categories = [
+      {
+        name: "Fit & Value Alignment",
+        description: "Should we even be here? Is this a real problem we are well-positioned to solve?",
+        questions: [
+          {
+            id: 1,
+            question: "Is there a clear fit between our value proposition and the client business need?",
+            coachingQuestions: [
+              "What specific business problem is the client trying to solve?",
+              "How clearly have they connected that problem to measurable business impact?",
+              "Where does our value proposition directly match their stated need?",
+              "What proof do we have that this is more than a general interest conversation?"
+            ],
+            actions: [
+              "Re-run discovery to quantify the problem and impact.",
+              "Map your value to 2–3 concrete outcomes the client cares about.",
+              "Share a relevant case study or proof point.",
+              "Disqualify politely if no real problem exists."
+            ],
+            options: [{ label: "Yes", points: 10 }, { label: "No", points: 0 }]
+          },
+          {
+            id: 2,
+            question: "What business mode is the client operating in?",
+            coachingQuestions: [
+              "Is the client trying to grow, fix a problem, reduce risk, or maintain stability?",
+              "What business pressure is creating the need to act now?",
+              "How does their current business mode change the urgency of this opportunity?",
+              "Have we confirmed this directly with the client or are we making an assumption?"
+            ],
+            actions: [
+              "Ask leadership what has changed in the last 90 days.",
+              "Tie your solution to growth, risk, or cost outcomes explicitly.",
+              "Validate urgency with a 'do nothing' scenario.",
+              "Reposition the deal to a higher-priority initiative."
+            ],
+            options: [{ label: "Growth", points: 10 }, { label: "Trouble", points: 5 }, { label: "Even keel", points: 0 }]
+          },
+          {
+            id: 7,
+            question: "What does the client prioritize in decision-making?",
+            coachingQuestions: [
+              "Is the client talking primarily about outcomes, value, risk, or price?",
+              "Have we helped the client define what value actually means for this decision?",
+              "Can we quantify the upside of solving the problem or the cost of doing nothing?",
+              "Are we shaping the decision criteria or simply responding to them?"
+            ],
+            actions: [
+              "Reframe the conversation around outcomes and ROI.",
+              "Quantify value using a simple business case.",
+              "Introduce risk/cost-of-delay to shift from price.",
+              "Align on decision criteria early with the buyer."
+            ],
+            options: [{ label: "Value / outcomes", points: 10 }, { label: "Balanced", points: 5 }, { label: "Price-driven", points: 0 }]
+          },
+          {
+            id: 10,
+            question: "Does the client demonstrate values consistent with ours?",
+            coachingQuestions: [
+              "Does the client treat our team, their team, and the process with respect?",
+              "Are their expectations reasonable and aligned with how we work best?",
+              "Are there any warning signs around trust, transparency, or partnership?",
+              "Would this be a client relationship we would be proud to grow over time?"
+            ],
+            actions: [
+              "Set clear expectations on process and communication.",
+              "Escalate misalignment early with a candid conversation.",
+              "Define mutual success criteria and working norms.",
+              "Disengage if values misalignment persists."
+            ],
+            options: [{ label: "Yes", points: 5 }, { label: "No", points: 0 }]
+          }
+        ]
+      },
+      {
+        name: "Deal Momentum & Buying Intent",
+        description: "Is this real, is there urgency, and will the client act?",
+        questions: [
+          {
+            id: 3,
+            question: "Is there a compelling event driving the decision?",
+            coachingQuestions: [
+              "What specific event, deadline, risk, or opportunity is driving action?",
+              "What happens if the client does nothing?",
+              "Is the timing externally driven or just internally preferred?",
+              "Has the client confirmed the consequence of missing the timeline?"
+            ],
+            actions: [
+              "Identify or co-create a deadline tied to business impact.",
+              "Document risks of inaction and validate with stakeholders.",
+              "Anchor milestones to an external event if possible.",
+              "Secure agreement on a target decision date."
+            ],
+            options: [{ label: "Yes", points: 10 }, { label: "No", points: 0 }]
+          },
+          {
+            id: 5,
+            question: "Has the client confirmed a budget for the project?",
+            coachingQuestions: [
+              "Has the client clearly confirmed that budget exists?",
+              "Do we know who owns or approves the budget?",
+              "Is this budget already allocated, or does it still need to be created?",
+              "Have we connected the investment to the business value or risk being addressed?"
+            ],
+            actions: [
+              "Build a simple ROI model to justify investment.",
+              "Identify the budget owner and approval path.",
+              "Explore reallocation from existing initiatives.",
+              "Propose phased scope to fit available budget."
+            ],
+            options: [{ label: "Yes", points: 10 }, { label: "No", points: 0 }]
+          },
+          {
+            id: 9,
+            question: "Is this a strategic logo or win that will expand our market share?",
+            coachingQuestions: [
+              "Would winning this client improve our credibility in a target market?",
+              "Could this logo lead to follow-on work, referrals, or expansion?",
+              "Is the strategic value high enough to justify extra pursuit effort?",
+              "Are we being disciplined about strategic value versus simply chasing revenue?"
+            ],
+            actions: [
+              "Map potential expansion paths and quantify upside.",
+              "Engage senior stakeholders to elevate importance.",
+              "Tailor proposal to maximize strategic impact.",
+              "Decide explicitly if this is a 'strategic bet'."
+            ],
+            options: [{ label: "Yes", points: 10 }, { label: "No", points: 0 }]
+          }
+        ]
+      },
+      {
+        name: "Access, Influence & Competitive Position",
+        description: "Do we have the relationships, influence, and position required to win?",
+        questions: [
+          {
+            id: 4,
+            question: "What level of access do we have to the economic buyer?",
+            coachingQuestions: [
+              "Do we know who owns the final business decision?",
+              "Have we had direct conversation with the economic buyer?",
+              "If access is indirect, who is translating our message and how well can they do it?",
+              "What would need to happen to earn direct access?"
+            ],
+            actions: [
+              "Request a joint session with the economic buyer.",
+              "Use your champion to broker an introduction.",
+              "Provide an exec-level brief to gain interest.",
+              "Align on business outcomes relevant to the buyer."
+            ],
+            options: [{ label: "Direct access", points: 10 }, { label: "Indirect / through others", points: 5 }, { label: "No access", points: 0 }]
+          },
+          {
+            id: 6,
+            question: "Do we have access to other key influencers?",
+            multiSelect: true,
+            coachingQuestions: [
+              "Who else will influence the decision, formally or informally?",
+              "Do we have a credible internal coach who will help us navigate the account?",
+              "Have we engaged the functional users who will feel the impact of the decision?",
+              "Are we missing any executive, technical, financial, or operational stakeholders?"
+            ],
+            actions: [
+              "Build a stakeholder map and fill gaps.",
+              "Secure an internal coach and align incentives.",
+              "Run targeted sessions with user/functional leaders.",
+              "Engage executive sponsor for alignment."
+            ],
+            options: [{ label: "Functional / user buyer", points: 5 }, { label: "Internal coach", points: 5 }, { label: "Executive sponsor", points: 5 }, { label: "Neither", points: 0 }]
+          },
+          {
+            id: 8,
+            question: "What is our competitive position?",
+            coachingQuestions: [
+              "Do we know who or what we are competing against, including doing nothing?",
+              "Why would the client choose us over the alternatives?",
+              "Have we confirmed whether we are preferred, one of many, or unknown?",
+              "What can we do next to improve differentiation and win probability?"
+            ],
+            actions: [
+              "Clarify differentiation against top alternatives.",
+              "Create a win plan addressing competitor strengths.",
+              "Secure a proof point (pilot/demo) to de-risk choice.",
+              "Align proposal to client-specific priorities."
+            ],
+            options: [{ label: "Preferred / incumbent / clear advantage", points: 10 }, { label: "Competitive but not leading", points: 5 }, { label: "Undifferentiated / unknown", points: 0 }]
+          }
+        ]
+      }
+    ];
+
+    const questions = categories.flatMap(category => category.questions);
+    const answers = {};
+
+    const maxScore = questions.reduce((sum, question) => {
+      if (question.multiSelect) {
+        return sum + question.options.reduce((optionSum, option) => optionSum + option.points, 0);
+      }
+      return sum + Math.max(...question.options.map(option => option.points));
+    }, 0);
+
+    const questionsEl = document.getElementById("questions");
+    const scoreEl = document.getElementById("score");
+    const maxScoreEl = document.getElementById("maxScore");
+    const progressFillEl = document.getElementById("progressFill");
+    const completionEl = document.getElementById("completion");
+    const recommendationBoxEl = document.getElementById("recommendationBox");
+    const recommendationTitleEl = document.getElementById("recommendationTitle");
+    const recommendationSummaryEl = document.getElementById("recommendationSummary");
+    const actionListEl = document.getElementById("actionList");
+    const resetButton = document.getElementById("resetButton");
+    const pdfButton = document.getElementById("pdfButton");
+    const emailToggleButton = document.getElementById("emailToggleButton");
+    const emailPanel = document.getElementById("emailPanel");
+    const emailInput = document.getElementById("emailInput");
+    const emailSendButton = document.getElementById("emailSendButton");
+
+    maxScoreEl.textContent = maxScore;
+
+    function getRecommendation(score) {
+      if (score >= 70) {
+        return {
+          title: "Pursue",
+          className: "pursue",
+          summary: "This opportunity shows strong qualification across fit, urgency, buyer access, decision dynamics, and strategic value. The recommendation is to pursue.",
+          actions: ["Assemble the right internal pursuit team.", "Build a focused deal pursuit strategy and win plan.", "Align on roles, next steps, and client engagement priorities.", "Validate timeline, buying process, decision criteria, and success outcomes."]
+        };
+      }
+      if (score >= 50) {
+        return {
+          title: "Review Further",
+          className: "review",
+          summary: "This opportunity has potential, but there are qualification gaps that need to be resolved before significant resources are committed.",
+          actions: ["Assemble the team to review the qualification gaps.", "Engage the client and key stakeholders to further qualify the opportunity.", "Confirm need, urgency, buyer access, budget, and decision process.", "Decide whether the next client interaction can materially improve qualification."]
+        };
+      }
+      return {
+        title: "Decline / Qualify Out",
+        className: "decline",
+        summary: "This opportunity does not currently meet the threshold for active pursuit.",
+        actions: ["Assemble the team to confirm the decision.", "Agree on any appropriate next steps with the client.", "Determine whether the relationship should move to nurture.", "Protect sales capacity for higher-probability opportunities."]
+      };
+    }
+
+    function buildEmailBody() {
+      const dealName = document.getElementById("dealName").value.trim() || "Untitled Opportunity";
+      const score = calculateScore();
+      const completed = Object.keys(answers).length;
+      const recommendation = getRecommendation(score);
+      const date = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
+
+      let body = `DEAL QUALIFICATION SCORECARD — ${dealName}\n`;
+      body += `Date: ${date}\n`;
+      body += `Score: ${score} / ${maxScore}\n`;
+      body += `Questions answered: ${completed} of ${questions.length}\n`;
+      body += `Recommendation: ${recommendation.title}\n\n`;
+      body += `${recommendation.summary}\n\n`;
+      body += `RECOMMENDED NEXT ACTIONS\n`;
+      recommendation.actions.forEach((a, i) => { body += `${i + 1}. ${a}\n`; });
+
+      body += `\nQUESTION RESPONSES\n`;
+      let counter = 1;
+      categories.forEach(cat => {
+        body += `\n${cat.name.toUpperCase()}\n`;
+        cat.questions.forEach(q => {
+          const answer = answers[q.id];
+          let answerText = "— Not answered";
+          if (Array.isArray(answer) && answer.length > 0) {
+            answerText = answer.map(a => `${a.label} (${a.points} pts)`).join(", ");
+          } else if (answer) {
+            answerText = `${answer.label} (${answer.points} pts)`;
+          }
+          body += `Q${counter}. ${q.question}\n   Answer: ${answerText}\n`;
+          counter++;
+        });
+      });
+
+      return { subject: `Deal Qualification Scorecard — ${dealName} — ${score}/${maxScore} (${recommendation.title})`, body };
+    }
+
+    function renderQuestions() {
+      questionsEl.innerHTML = "";
+      let questionCounter = 1;
+
+      categories.forEach(category => {
+        const categoryBlock = document.createElement("section");
+        categoryBlock.className = "category-block";
+
+        const categoryHeader = document.createElement("div");
+        categoryHeader.className = "category-header";
+
+        const categoryTitle = document.createElement("h2");
+        categoryTitle.textContent = category.name;
+
+        const categoryDescription = document.createElement("p");
+        categoryDescription.textContent = category.description;
+
+        categoryHeader.appendChild(categoryTitle);
+        categoryHeader.appendChild(categoryDescription);
+        categoryBlock.appendChild(categoryHeader);
+
+        category.questions.forEach(question => {
+          const card = document.createElement("div");
+          card.className = "question-card";
+
+          const header = document.createElement("div");
+          header.className = "question-header";
+
+          const number = document.createElement("div");
+          number.className = "number";
+          number.textContent = questionCounter++;
+
+          const copy = document.createElement("div");
+          const title = document.createElement("p");
+          title.className = "question-title";
+          title.textContent = question.question;
+
+          const subtitle = document.createElement("p");
+          subtitle.className = "question-subtitle";
+          subtitle.textContent = question.multiSelect
+            ? "Select all that apply. Points will be added together. Selecting Neither clears other choices."
+            : "Select the answer that best reflects the current opportunity reality.";
+
+          copy.appendChild(title);
+          copy.appendChild(subtitle);
+          header.appendChild(number);
+          header.appendChild(copy);
+
+          const options = document.createElement("div");
+          options.className = "options";
+
+          question.options.forEach(option => {
+            const button = document.createElement("button");
+            button.className = "option-button";
+            button.type = "button";
+            button.dataset.questionId = question.id;
+            button.dataset.optionLabel = option.label;
+
+            const label = document.createElement("span");
+            label.textContent = option.label;
+
+            const points = document.createElement("span");
+            points.className = "points";
+            points.textContent = `${option.points} pts`;
+
+            button.appendChild(label);
+            button.appendChild(points);
+            button.addEventListener("click", () => selectOption(question, option));
+            options.appendChild(button);
+          });
+
+          const buttonRow = document.createElement("div");
+          buttonRow.className = "button-row";
+
+          const coachingButton = document.createElement("button");
+          coachingButton.className = "coaching-toggle";
+          coachingButton.type = "button";
+          coachingButton.textContent = "Coaching Questions to Improve Result";
+
+          const coachingPanel = document.createElement("div");
+          coachingPanel.className = "coaching-panel";
+
+          const coachingTitle = document.createElement("p");
+          coachingTitle.textContent = "Ask yourself:";
+
+          const coachingList = document.createElement("ul");
+          question.coachingQuestions.forEach(coachingQuestion => {
+            const li = document.createElement("li");
+            li.textContent = coachingQuestion;
+            coachingList.appendChild(li);
+          });
+
+          coachingPanel.appendChild(coachingTitle);
+          coachingPanel.appendChild(coachingList);
+
+          coachingButton.addEventListener("click", () => {
+            coachingPanel.classList.toggle("open");
+            coachingButton.textContent = coachingPanel.classList.contains("open")
+              ? "Hide Coaching Questions"
+              : "Coaching Questions to Improve Result";
+          });
+
+          const actionsButton = document.createElement("button");
+          actionsButton.className = "actions-toggle";
+          actionsButton.type = "button";
+          actionsButton.textContent = "Potential Actions to Take";
+
+          const actionsPanel = document.createElement("div");
+          actionsPanel.className = "actions-panel";
+
+          const actionsTitle = document.createElement("p");
+          actionsTitle.textContent = "Potential actions:";
+
+          const actionsList = document.createElement("ul");
+          question.actions.forEach(action => {
+            const li = document.createElement("li");
+            li.textContent = action;
+            actionsList.appendChild(li);
+          });
+
+          actionsPanel.appendChild(actionsTitle);
+          actionsPanel.appendChild(actionsList);
+
+          actionsButton.addEventListener("click", () => {
+            actionsPanel.classList.toggle("open");
+            actionsButton.textContent = actionsPanel.classList.contains("open")
+              ? "Hide Actions"
+              : "Potential Actions to Take";
+          });
+
+          buttonRow.appendChild(coachingButton);
+          buttonRow.appendChild(actionsButton);
+
+          card.appendChild(header);
+          card.appendChild(options);
+          card.appendChild(buttonRow);
+          card.appendChild(coachingPanel);
+          card.appendChild(actionsPanel);
+          categoryBlock.appendChild(card);
+        });
+
+        questionsEl.appendChild(categoryBlock);
+      });
+    }
+
+    function selectOption(question, option) {
+      if (question.multiSelect) {
+        const selectedOptions = answers[question.id] || [];
+
+        if (option.label === "Neither") {
+          const isAlreadySelected = selectedOptions.some(item => item.label === "Neither");
+          answers[question.id] = isAlreadySelected ? [] : [option];
+        } else {
+          const selectedWithoutNeither = selectedOptions.filter(item => item.label !== "Neither");
+          const isAlreadySelected = selectedWithoutNeither.some(item => item.label === option.label);
+          answers[question.id] = isAlreadySelected
+            ? selectedWithoutNeither.filter(item => item.label !== option.label)
+            : [...selectedWithoutNeither, option];
+        }
+
+        if (answers[question.id].length === 0) delete answers[question.id];
+      } else {
+        answers[question.id] = option;
+      }
+
+      updateSelectedStates();
+      updateScore();
+    }
+
+    function updateSelectedStates() {
+      document.querySelectorAll(".option-button").forEach(button => {
+        const questionId = Number(button.dataset.questionId);
+        const optionLabel = button.dataset.optionLabel;
+        const answer = answers[questionId];
+        let selected = false;
+
+        if (Array.isArray(answer)) {
+          selected = answer.some(item => item.label === optionLabel);
+        } else if (answer) {
+          selected = answer.label === optionLabel;
+        }
+
+        button.classList.toggle("selected", selected);
+      });
+    }
+
+    function calculateScore() {
+      return Object.values(answers).reduce((sum, answer) => {
+        if (Array.isArray(answer)) {
+          return sum + answer.reduce((innerSum, item) => innerSum + item.points, 0);
+        }
+        return sum + answer.points;
+      }, 0);
+    }
+
+    function updateScore() {
+      const score = calculateScore();
+      const completed = Object.keys(answers).length;
+      const recommendation = getRecommendation(score);
+
+      scoreEl.textContent = score;
+      progressFillEl.style.width = `${Math.min((score / maxScore) * 100, 100)}%`;
+      completionEl.textContent = `${completed} of ${questions.length} questions completed`;
+
+      recommendationBoxEl.className = `recommendation ${recommendation.className}`;
+      recommendationTitleEl.textContent = recommendation.title;
+      recommendationSummaryEl.textContent = recommendation.summary;
+
+      actionListEl.innerHTML = "";
+      recommendation.actions.forEach(action => {
+        const li = document.createElement("li");
+        li.textContent = action;
+        actionListEl.appendChild(li);
+      });
+    }
+
+    function resetScorecard() {
+      Object.keys(answers).forEach(key => delete answers[key]);
+      document.getElementById("dealName").value = "";
+      emailPanel.classList.remove("open");
+      emailInput.value = "";
+      emailToggleButton.textContent = "✉ Email results";
+      updateSelectedStates();
+      updateScore();
+    }
+
+    pdfButton.addEventListener("click", () => {
+      window.print();
+    });
+
+    emailToggleButton.addEventListener("click", () => {
+      emailPanel.classList.toggle("open");
+      emailToggleButton.textContent = emailPanel.classList.contains("open")
+        ? "✕ Cancel"
+        : "✉ Email results";
+    });
+
+    emailSendButton.addEventListener("click", () => {
+      const address = emailInput.value.trim();
+      if (!address) {
+        emailInput.focus();
+        emailInput.style.borderColor = "#ef4444";
+        setTimeout(() => { emailInput.style.borderColor = ""; }, 2000);
+        return;
+      }
+      const { subject, body } = buildEmailBody();
+      const mailto = `mailto:${encodeURIComponent(address)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    });
+
+    resetButton.addEventListener("click", resetScorecard);
+
+    function runTests() {
+      console.assert(maxScore === 100, `Expected maxScore to be 100, got ${maxScore}`);
+      console.assert(getRecommendation(70).title === "Pursue", "70 should recommend Pursue");
+      console.assert(getRecommendation(69).title === "Review Further", "69 should recommend Review Further");
+      console.assert(getRecommendation(50).title === "Review Further", "50 should recommend Review Further");
+      console.assert(getRecommendation(49).title === "Decline / Qualify Out", "49 should recommend Decline / Qualify Out");
+      console.assert(questions.length === 10, `Expected 10 questions, got ${questions.length}`);
+      console.assert(document.getElementById("questions") !== null, "Questions container should exist");
+    }
+
+    renderQuestions();
+    runTests();
+    updateSelectedStates();
+    updateScore();
+  </script>
+</body>
+</html>
